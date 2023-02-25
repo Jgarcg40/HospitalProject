@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">    
+    
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <h:outputStylesheet library="css" name="default.css"/>
+        <h:outputStylesheet library="css" name="cssLayout.css"/>
+        <title>Hospital</title>
+    </h:head>
+
+    <h:body>
+
+        <div id="top" style="display: flex;">
+            <ui:insert name="top">
+            </ui:insert>
+            
+             <h:form class="hide" id="login">
+                <f:event type="preRenderView" listener="#{estadisticasController.init}"/>
+                <p:panel header="Login"  style="width:350px" >
+                    <h:graphicImage library="images" width="370" height="200" style="padding-right:50px" value="/resources/img/Vista_del_Hospital_de_León.jpg" />
+                    <h:panelGrid columns="2" cellpadding="5">
+                    <h:outputLabel for="username" value="Usuario:" />
+                    <p:inputText value="#{loginController.login.usuario}" required="true" requiredMessage="No has introducido el usuario" id="txtUsuario"/>
+                    <h:outputLabel for="password" value="Clave:" />
+                    <p:password value="#{loginController.login.contraseña}" feedback="false" required="true" requiredMessage="No has introducido la contraseña" id="txtContrasena"/>
+                    <f:facet name="footer">
+                        <p:commandButton id="loginButton" value="Entrar" update="login" action="#{loginController.comprobarUsuario}"/>
+                    </f:facet>
+                    </h:panelGrid>
+                    <p:messages  id="sinPermisos"/>
+                </p:panel>
+            </h:form>
+        </div>
+
+        <div id="content">
+            <ui:insert name="content"></ui:insert>
+        </div>
+
+        <div id="bottom">
+            <ui:insert name="bottom"></ui:insert>
+            <p:panelGrid columns="2" layout="grid" style="background-color: #2196f3 !important;">
+                <p:outputLabel value="Email: hospitalfernjon@gmail.com"/>
+                <p:outputLabel value="Teléfono: 987654321" />
+                <p:outputLabel value="Dirección: C/Hospital" />
+                <p:outputLabel value="País: España" />
+                <p:outputLabel value="Ciudad: León" />
+                <p:outputLabel value="Horario: 24h abierto todo el año" />
+            </p:panelGrid>
+        </div>
+
+    </h:body>
+
+</html>

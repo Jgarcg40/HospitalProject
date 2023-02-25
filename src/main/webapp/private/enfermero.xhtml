@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/template/plantillaGeneral.xhtml">
+  
+            <ui:define name="top">
+                <ui:include src="./../WEB-INF/template/plantillaLogin.xhtml" />
+                
+                <h:form style="padding-right: 20px">
+                    <p:commandButton id="botonAlertaAlmacen" value="Comprobar almacen" update="alertaAlmacen" action="#{secretarioController.comprobarAlmacen}"/>
+                    <p:growl id="alertaAlmacen" showDetail="true"/>
+                </h:form>
+                
+                <h:form style="padding-right: 20px">
+                    <p:commandButton value="Ayuda" type="button" icon="pi pi-external-link" onclick="PF('dlg1').show()"/>
+                    <p:dialog header="Ayuda" widgetVar="dlg1" modal="true" showEffect="fade">
+                        <br>
+                        Si elegimos la pestaña paciente, tendremos 4 opciones, las cuales las podemos ver en la parte media de la página web. Estas opciones se dividen en:
+                        </br>
+
+                        <br>
+                        1-Crear paciente: sirve para añadir pacientes a la base de datos. Solo habría que rellenar los campos indicados y darle al botón Añadir paciente.
+                        </br>
+
+                        <br>
+                        2-Modificar paciente: sirve para modificar pacientes ya añadidos previamente a la base de datos. Para modificarlos
+                        primero se buscarán con el buscador el paciente con su nombre y apellidos, después se rellenarán los campos para modificarlo y se pulsará el botón Modificar paciente.
+                        </br>
+
+                        <br>
+                        3-Eliminar paciente: sirve para eliminar pacientes ya añadidos previamente a la base de datos. Para eliminarlos solo es necesario poner el nombre y apellidos en el buscador y luego darle al botón Eliminar paciente.          
+                        </br>
+
+                        <br>
+                        4-Ingresar paciente: sirve para ingresar pacientes ya añadidos previamente a la base de datos. Para eliminarlos solo es necesario poner el nombre y apellidos en el buscador y luego darle al botón Ingresar paciente.
+                        </br>
+
+                        <br>
+                        La pestaña gestión almacén sirve para añadir o quitar medicinas al almacén. Se añade la cantidad y luego hay que pulsar el botón Actualizar medicinas.
+                        </br>
+                    </p:dialog>
+                </h:form>
+                
+            </ui:define>
+
+            <ui:define name="content">
+                <p:tabView id="pestanas">
+                    <p:tab title="Paciente">
+                        <p:tabView id="paciente">
+                            <p:tab title="Crear Paciente">
+                                <h:form>
+                                    <p:panel id="crearPaciente">
+                                        <h:panelGrid columns="3" cellpadding="5">
+                                            <h:outputLabel value="Nombre:" />
+                                            <p:inputText value="#{secretarioController.paciente.nombre}" id="txtNombre" required="true" requiredMessage="No has introducido el Nombre"/>
+                                            <p:message for="txtNombre"/>
+                                            <h:outputLabel value="Primer apellido:" />
+                                            <p:inputText value="#{secretarioController.paciente.apellido1}" id="txtApellido1" required="true" requiredMessage="No has introducido el primer apellido"/>
+                                            <p:message for="txtApellido1"/>
+                                            <h:outputLabel value="Segundo apellido:" />
+                                            <p:inputText value="#{secretarioController.paciente.apellido2}" id="txtApellido2" required="true" requiredMessage="No has introducido el segundo apellido"/>
+                                            <p:message for="txtApellido2"/>
+                                            <h:outputLabel value="NIF:" />
+                                            <p:inputText value="#{secretarioController.paciente.NIFNIE}" maxlength="10" id="txtNIFNIE" required="true" requiredMessage="No has introducido el NIF"/>
+                                            <p:message for="txtNIFNIE"/>
+                                            <h:outputLabel value="Motivo de ingreso:" />
+                                            <p:inputText value="#{secretarioController.paciente.enfermedad}"/>
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <h:outputLabel value="Personal asignado:" />
+                                            <p:selectOneMenu value="#{secretarioController.personal.idTrabajador}">
+                                                <f:selectItems value="#{secretarioController.listaPersonal}" var="personal" itemLabel="#{personal.nombre}" itemValue="#{personal.idTrabajador}"/>
+                                            </p:selectOneMenu>                              
+                                        </h:panelGrid>
+                                        
+                                        <h:panelGrid columns="1" cellpadding="5">
+                                            <p:growl id="mensajeCreadoPaciente" showDetail="true" />
+                                            <p:commandButton id="botonCrearPaciente" value="Añadir paciente" update="mensajeCreadoPaciente" action="#{secretarioController.registrarPacientes}"/>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="Modificar Paciente">
+                                <h:form>
+                                    <p:panel>
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <p:commandButton value="Buscar" update=":pestanas:paciente:modificarPaciente mensajePacienteNoEncontrado" action="#{secretarioController.buscarPaciente}"/>
+                                            <p:inputText value="#{secretarioController.busquedaPaciente}" required="true" requiredMessage="No has introducido el término de búsqueda"/>
+                                            <p:growl id="mensajePacienteNoEncontrado" showDetail="true" />
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                                <h:form id="modificarPaciente">
+                                    <p:panel>
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <h:outputLabel value="Nombre:" />
+                                            <p:inputText value="#{secretarioController.paciente.nombre}" required="true" requiredMessage="No has introducido el Nombre"/>
+                                            <h:outputLabel value="Primer apellido:" />
+                                            <p:inputText value="#{secretarioController.paciente.apellido1}" required="true" requiredMessage="No has introducido el primer apellido"/>
+                                            <h:outputLabel value="Segundo apellido:" />
+                                            <p:inputText value="#{secretarioController.paciente.apellido2}" required="true" requiredMessage="No has introducido el segundo apellido"/>
+                                            <h:outputLabel value="NIF:" />
+                                            <p:inputText value="#{secretarioController.paciente.NIFNIE}" maxlength="10" required="true" requiredMessage="No has introducido el NIF"/>
+                                            <h:outputLabel value="Motivo de ingreso:" />
+                                            <p:inputText value="#{secretarioController.paciente.enfermedad}"/>
+
+                                            <h:outputLabel value="Personal asignado:" />
+                                            <p:selectOneMenu value="#{secretarioController.personal.idTrabajador}">
+                                                <f:selectItems value="#{secretarioController.listaPersonal}" var="personal" itemLabel="#{personal.nombre}" itemValue="#{personal.idTrabajador}"/>
+                                            </p:selectOneMenu>                              
+                                            
+                                            <h:panelGrid columns="1" cellpadding="5">
+                                                <p:growl id="mensajeModificadoPaciente" showDetail="true" />
+                                                <p:commandButton value="Modificar paciente" update="mensajeModificadoPaciente" action="#{secretarioController.modificarPaciente}"/>
+                                            </h:panelGrid>
+                                            
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </p:tab>
+                            <p:tab title="Eliminar Paciente">
+                                <h:form>
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <p:inputText value="#{secretarioController.busquedaPaciente}"  required="true" requiredMessage="No has introducido el término de búsqueda"/>
+                                        <p:commandButton value="Buscar" update="@form mensajeEliminadoPaciente" action="#{secretarioController.buscarPaciente}"/>
+                                        <h:outputLabel value="#{secretarioController.nombreCompletoPaciente}" />
+                                        <p:growl id="mensajeEliminadoPaciente" showDetail="true"/>
+                                        <p:commandButton update="mensajeEliminadoPaciente" value="Eliminar paciente" action="#{secretarioController.eliminarPaciente}"/>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:tab>
+                            
+                            <p:tab title="Ingresar Paciente">
+                                <h:form>
+                                    <h:panelGrid columns="2" cellpadding="5">
+                                        <p:inputText value="#{secretarioController.busquedaPaciente}"  required="true" requiredMessage="No has introducido el término de búsqueda"/>
+                                        <p:commandButton value="Buscar" update="@form mensajeIngresadoPaciente" action="#{secretarioController.buscarPaciente}"/>
+                                        <h:outputLabel value="#{secretarioController.nombreCompletoPaciente}" />
+                                        <p:growl id="mensajeIngresadoPaciente" showDetail="true"/>
+                                        <p:commandButton update="mensajeIngresadoPaciente" value="Ingresar paciente" action="#{secretarioController.ingresarPaciente}"/>
+                                    </h:panelGrid>
+                                </h:form>
+                            </p:tab>
+                        </p:tabView>
+                    </p:tab>
+                    
+                    <p:tab title="Gestión de almacen">
+                        <h:form>                       
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <c:forEach var="medicamento" items="#{secretarioController.listaAlmacen}">
+                                    <h:outputLabel value="#{medicamento.nombre}"/>
+                                    <p:inputNumber value="#{medicamento.cantidad}" thousandSeparator="" decimalSeparator="." minValue="0" decimalPlaces="0" />
+                                </c:forEach>
+                                <p:growl id="mensajeMedicinasAnadidas" showDetail="true" />
+                                <p:commandButton  value="Actualizar medicinas" update="mensajeMedicinasAnadidas" action="#{secretarioController.anadirMedicinas}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+                
+            </ui:define>
+            
+            <ui:define name="bottom">
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

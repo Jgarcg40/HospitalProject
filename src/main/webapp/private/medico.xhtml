@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    
+    <body>
+        
+        <ui:composition template="./../WEB-INF/template/plantillaGeneral.xhtml">
+            
+            <ui:define name="top">
+                <ui:include src="./../WEB-INF/template/plantillaLogin.xhtml" />
+                <h:form style="padding-left: 20px">
+                    <p:commandButton value="Ayuda" type="button" icon="pi pi-external-link" onclick="PF('dlg1').show()"/>
+                    <p:dialog header="Ayuda" widgetVar="dlg1" modal="true" showEffect="fade">
+                        <br>
+                        En la pestaña medicinas podemos añadir medicinas a un paciente existente ya añadido previamente a la base de datos. Para añadirlo solo es necesario poner el nombre y apellidos en el buscador del paciente, rellenar los campos y darle al botón Asignar medicamento.
+                        </br>
+                        <br>
+                        En la pestaña dar de alta se puede dar de alta a pacientes ya añadidos previamente a la base de datos. Para darles de alta solo es necesario poner el nombre y apellidos en el buscador y luego darle al botón Dar de alta.
+                        </br>                 
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+            <ui:define name="content">
+                <p:tabView id="pestanas">
+                    <p:tab title="Medicinas">
+                        <h:form>                     
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:inputText value="#{medicoController.busquedaPaciente}"  required="true" requiredMessage="No has introducido el término de búsqueda"/>
+                                <p:commandButton value="Buscar" update="@form :pestanas:modificarMedicinas" action="#{medicoController.buscarPaciente}"/>
+                            </h:panelGrid>
+                        </h:form>
+                        <h:form id="modificarMedicinas">
+                            <h:outputLabel value="#{medicoController.nombreCompletoPaciente}" />
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <h:outputLabel value="Medicamento:" />
+                                <p:selectOneMenu value="#{medicoController.almacen.idProducto}">
+                                    <f:selectItems value="#{medicoController.listaAlmacen}" var="almacen" itemLabel="#{almacen.nombre}" itemValue="#{almacen.idProducto}"/>
+                                </p:selectOneMenu>
+                                <h:outputLabel value="Cantidad de medicinas:" />
+                                <p:inputNumber value="#{medicoController.paciente.UMedicamento}" thousandSeparator="" decimalSeparator="." minValue="0" decimalPlaces="0" />
+                                <h:outputLabel value="Motivo de ingreso:" />
+                                <p:inputText value="#{medicoController.paciente.enfermedad}"/>
+                                <p:growl id="mensajeMedicamentoPaciente" showDetail="true"/>
+                                <p:commandButton update="mensajeMedicamentoPaciente" value="Asignar Medicamento" action="#{medicoController.asignarMediamento}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:tab>
+                    
+                    <p:tab title="Dar de alta">
+                        <h:form>
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:inputText value="#{medicoController.busquedaPaciente}"  required="true" requiredMessage="No has introducido el término de búsqueda"/>
+                                <p:commandButton value="Buscar" update="@form mensajeAltaPaciente" action="#{medicoController.buscarPaciente}"/>
+                                <h:outputLabel value="#{medicoController.nombreCompletoPaciente}" />
+                                <p:growl id="mensajeAltaPaciente" showDetail="true"/>
+                                <p:commandButton update="mensajeAltaPaciente" value="Dar de alta" action="#{medicoController.darAlta}"/>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+
+            <ui:define name="bottom">
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

@@ -1,0 +1,4 @@
+/*Sirve para ocultar el login en las pagina privadas*/
+.hide { 
+    display: none;
+}
