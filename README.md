@@ -1,3 +1,5 @@
-Aplicación web que utiliza Html y css para la interfaz y una base de datos sql para almacenar la información del hospital, el resto de la aplicación es manejada en el lenguaje java
+Aplicación web que utiliza Html y css para la interfaz y una base de datos sql para almacenar la información del hospital, el resto de la aplicación es manejada en el lenguaje java, además utiliza el modelo vista controlador para organizar las clases. 
 
-Para utilizarla es necesario lanzar la aplicación en Eclipse y implementar la base de datos que viene en el paquete con tus credenciales
+Principalmente la aplicación se base en un hospital con sus empleados pacientes y los medicamentos guardados en el almacen, todo ello se puede manejar desde una interfaz de usuario, también cuenta con un login y un generados de contraseñas cuando te registras que se mandan por email a la persona registrada. Los médicos podrán dar de baja y de alta a los pacientes, tendrán asignados unos pacientes y podrán modificar los medicamentos usados del almacén. Los secretarios serán los que modifican el perfil de los empleados y pacientes y podrán pedir más medicinas, los enfermeros podrán modificar los medicamentos y ver los historiales de los pacientes al igual que los medicos y secretarios.
+
+Para ejecutarla es necesario lanzar la aplicación en Eclipse e implementar la base de datos que viene en el paquete resources dentro de la carpeta webapp. Para ello es necesario crear una base de datos en phpmyadmin y lanzarla con xampp. 
